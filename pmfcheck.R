@@ -52,51 +52,13 @@ init <- c(p0 = p0,
 num <- 800 # number of samples
 samps <- sample(1:sims, size = num, replace = TRUE)
 # Optimize
-but <- optim(par = init,
+fit <- optim(par = init,
              fn = nll,
              patch1.before = sim.stor[samps, 1],
              patch2.before = sim.stor[samps, 2],
              patch1.after = sim.stor[samps, 3],
              control = list(trace = 1))
-but
+fit
 p0
 b1
-but$par
-    
-## pmf.test <- function(k, n1, n2, p1, p2){
-##     C <- exp((2 * 1i * pi) / (n1 + n2 + 1))
-##     innerP <- prod(sapply(1:n1, FUN = function(m){1 + (C ^ m - 1) * p1}),
-##                    sapply(1:n2, FUN = function(m){1 + (C ^ m - 1) * p2}))
-##     outerS <- sum(sapply(0:(n1 + n2), FUN = function(l){C ^ (-l * k) * innerP}))
-##     (1 / (n1 + n2 + 1)) * outerS
-## }
-
-## }
-
-
-## pmf.test <- function(k, n1, n2, p1, p2){
-##     omega <- (2 * pi) / (n1 + n2 + 1)
-##     z1 <- function(l, p1){
-##         1 - p1 + (p1 * cos(omega * l)) + (1i * p1 * sin(omega * l))
-##     }
-##     z2 <- function(l, p2){
-##         1 - p2 + (p2 * cos(omega * l)) + (1i * p2 * sin(omega * l))
-##     }
-## }
-
-
-## Arg <- function(l, p, omega){
-##         atan2(y = p * sin(omega * l),
-##               x = 1 - p + (p * cos(omega * l)))
-## }
-
-## modz <- function(l, p, omega){
-##     sqrt((1 - p + (p * cos(omega * l))) ^ 2 + (p * sin(omega * l)) ^ 2)
-## }
-
-
-## pmf.test <- function(k, n1, n2, p1, p2){
-##     omega <- (2 * pi) / (n1 + n2 + 1)
-##     d.l <- sum(sapply(
-    
-        
+fit$par
