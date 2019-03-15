@@ -1,12 +1,10 @@
 # Parameters
-sims <- 10000 # number of simulations
+sims <- 100000 # number of simulations
 p0 <- log(.1 / (1 - .1)) # density-independent probability of dispersing (logit scale)
 b1 <- .01 # density-dependent increase in probability of dispersing (logit scale)
 
-pdisp <- function(p0, b1, x){
-    lmod <- p0 + b1 * x
-    return(exp(lmod) / (exp(lmod) + 1))
-}
+# Source model1
+source("models/model1.R")
 
 # Simulate dispersal
 ## Set seed
@@ -16,8 +14,8 @@ sim.stor <- matrix(NA, ncol = 4, nrow = sims)
 ## Fill matrix
 sim.stor[, 1] <- rpois(n = sims, lambda = 80) # random abundance before dispersal in patch1
 sim.stor[, 2] <- rpois(n = sims, lambda = 50) # random abundance before dispersal in patch2
-d1 <- sapply(1:sims, FUN = function(X){rbinom(n = 1, size = sim.stor[X, 1], prob = pdisp(p0, b1, sim.stor[X, 1]))}) # dispersal from patch1
-d2 <- sapply(1:sims, FUN = function(X){rbinom(n = 1, size = sim.stor[X, 2], prob = pdisp(p0, b1, sim.stor[X, 2]))})
+d1 <- rbinom(n = sims, size = sim.stor[, 1], prob = model1(sim.stor[, 1], p0, b1)) # dispersal patch1
+d2 <- rbinom(n = sims, size = sim.stor[, 2], prob = model1(sim.stor[, 2], p0, b1)) # dispersal patch2
 sim.stor[, 3] <- sim.stor[, 1] - d1 + d2 # abundance after dispersal in patch1
 sim.stor[, 4] <- sim.stor[, 2] - d2 + d1 # abundance after dispersal in patch2
 ## Rename columns
@@ -26,38 +24,41 @@ colnames(sim.stor) <- c("patch1.before", "patch2.before", "patch1.after", "patch
 head(sim.stor)
 
 
-# Source 'poibin' library, which uses the discrete fourier tranform (DFT) to exactly compute the cdf and pmf of a Poisson binomial distribution
+# Source 'poibin' package, which uses the Discrete Fourier Transform (DFT) to efficiently compute the exact pmf of a Poisson binomial distribution (function 'dpoibin()')
 library(poibin)
     
-nll <- function(param, patch1.before, patch2.before, patch1.after){
-    p0 <- param[[1]]
-    b1 <- param[[2]]
-    d1 <- pdisp(p0, b1, patch1.before) # probability of dispersing from patch1
-    d2 <- pdisp(p0, b1, patch2.before) # probability of dispersing from patch2
-    loglike <- dim(length(patch1.before))
-    for(i in 1:length(patch1.before)){
-        loglike[i] <- log(dpoibin(kk = patch1.after[i],
-                                  pp = c(rep(d2[i], patch2.before[i]),
-                                         rep(1 - d1[i], patch1.before[i]))))
+nll <- function(param, data, disp.mod){
+    d1 <- do.call(disp.mod, append(data, param)) # probability disperse from patch1
+    d2 <- do.call(disp.mod, append(data, param)) # probability disperse from patch2
+    loglike <- dim(length(data$patch1.before))
+    for(i in 1:length(data$patch1.before)){
+        loglike[i] <- log(dpoibin(kk = data$patch1.after[i],
+                                  pp = c(rep(1 - d1[i], data$patch1.before[i]),
+                                         rep(d2[i], data$patch2.before[i]))))
     }
     loglike[is.na(loglike)] <- -10000 # punish Inf
     return(-sum(loglike))
 }
 
-                        
-init <- c(p0 = p0,
-          b1 = b1)
-
 # Randomly sample from simulations
-num <- 800 # number of samples
+## Set seed
+set.seed(20190315)
+## Number of samples
+num <- 200
+## Generate samples
 samps <- sample(1:sims, size = num, replace = TRUE)
+
 # Optimize
+## Set starting values for optimization
+init <- list(p0 = p0,
+             b1 = b1)
+## Run optimizer
 fit <- optim(par = init,
              fn = nll,
-             patch1.before = sim.stor[samps, 1],
-             patch2.before = sim.stor[samps, 2],
-             patch1.after = sim.stor[samps, 3],
+             data = as.list(data.frame(sim.stor[samps, ])),
+             disp.mod = model1,
              control = list(trace = 1))
+## Summarize fit
 fit
 p0
 b1
