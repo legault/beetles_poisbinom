@@ -1,9 +1,7 @@
 # Source parameters
-source("parameters/param2.R")
-
+source("parameters/param2.R")$value
 # Source model1
-source("models/model2.R")
-
+source("models/model2.R")$value
 # Set number of simulations
 sims <- 100000
 
