@@ -25,4 +25,4 @@ colnames(sim.stor) <- c("patch1.before", "patch2.before", "patch1.after", "patch
 head(sim.stor)
 
 # Save results
-write.table(sim.stor, file = "data/simulation1.csv", sep = ",", col.names = TRUE, row.names = FALSE)
+write.table(sim.stor, file = "../data/simulation1.csv", sep = ",", col.names = TRUE, row.names = FALSE)
