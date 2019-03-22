@@ -13,6 +13,6 @@ nll <- function(param, data, disp.mod){
                                   pp = c(rep(1 - d1[i], data$patch1.before[i]),
                                          rep(d2[i], data$patch2.before[i]))))
     }
-    loglike[is.na(loglike)] <- -10000 # punish Inf
+    loglike[is.infinite(loglike)] <- -10000 # punish Inf
     return(-sum(loglike))
 }
