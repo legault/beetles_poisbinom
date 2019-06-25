@@ -12,8 +12,8 @@ nll <- function(param, data, disp.mod){
     loglike <- dim(length(data$patch1.before))
     for(i in 1:length(data$patch1.before)){
         loglike[i] <- log(dpoibin(kk = data$patch1.after[i],
-                                  pp = c(rep(1 - d1[i], data$patch1.before[i]),
-                                         rep(d2[i], data$patch2.before[i]))))
+                                  pp = c(1 - d1[i], d2[i]),
+                                  wts = c(data$patch1.before[i], data$patch2.before[i])))
     }
     loglike[is.infinite(loglike)] <- -10000 # punish Inf
     return(-sum(loglike))
