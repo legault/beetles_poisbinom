@@ -120,7 +120,7 @@ for(i in 1){
 
 ## All other dispersal models
 ### Number of random starting values
-numr <- 10
+numr <- 200
 ### Use estimated p0 in subsequent optimization; random values for other parameters
 startingvalues <- list(p0 = rep(fit$par, numr),
                        b1 = rnorm(n = numr, mean = 0, sd = .01),
@@ -138,14 +138,20 @@ for(i in 2:length(m.list)){
                      data = as.list(csdata),
                      disp.mod = paste(m.list[i]),
                      method = c("Nelder-Mead"),
-                     control = list(maxit = 2000))
+                     control = list(maxit = 2000, reltol = 1e-6))
         if(fit$convergence == 10){
-            fit <- optim(par = as.list(fit$par),
-                     fn = nll,
-                     data = as.list(csdata),
-                     disp.mod = paste(m.list[i]),
-                     method = c("Nelder-Mead"),
-                     control = list(maxit = 2000))
+            t <- 1
+            maxt <- 10
+            while(t <= maxt){
+                fit <- optim(par = lapply(fit$par, FUN = function(X) rnorm(n=1, mean=X, sd=0.01)),
+                             fn = nll,
+                             data = as.list(csdata),
+                             disp.mod = paste(m.list[i]),
+                             method = c("Nelder-Mead"),
+                             control = list(maxit = 2000, reltol = 1e-6))
+                if(fit$convergence == 0) break
+                t <- t + 1
+            }
         }
         estimates.temp <- cbind(data.frame(Species = c("CS"),
                                            Model = m.list[i],
@@ -192,7 +198,7 @@ for(i in 1){
 
 ## All other dispersal models
 ### Number of random starting values
-numr <- 10
+numr <- 200
 ### Use estimated p0 in subsequent optimization; random values for other parameters
 startingvalues <- list(p0 = rep(fit$par, numr),
                        b1 = rnorm(n = numr, mean = 0, sd = .01),
@@ -210,14 +216,20 @@ for(i in 2:length(m.list)){
                      data = as.list(cfdata),
                      disp.mod = paste(m.list[i]),
                      method = c("Nelder-Mead"),
-                     control = list(maxit = 2000))
+                     control = list(maxit = 2000, reltol = 1e-6))
         if(fit$convergence == 10){
-            fit <- optim(par = as.list(fit$par),
-                     fn = nll,
-                     data = as.list(cfdata),
-                     disp.mod = paste(m.list[i]),
-                     method = c("Nelder-Mead"),
-                     control = list(maxit = 2000))
+            t <- 1
+            maxt <- 10
+            while(t <= maxt){
+                fit <- optim(par = lapply(fit$par, FUN = function(X) rnorm(n=1, mean=X, sd=0.01)),
+                             fn = nll,
+                             data = as.list(cfdata),
+                             disp.mod = paste(m.list[i]),
+                             method = c("Nelder-Mead"),
+                             control = list(maxit = 2000, reltol = 1e-6))
+                if(fit$convergence == 0) break
+                t <- t + 1
+            }
         }
         estimates.temp <- cbind(data.frame(Species = c("CF"),
                                            Model = m.list[i],
@@ -243,5 +255,5 @@ for(i in 2:length(m.list)){
 estimates.summary <- estimates.summary[order(estimates.summary$Species), ]
 
 tab <- xtable(estimates.summary[, -5], digits = 4)
-print(x = tab, type = "html", file = "results-fits2.html", digits = 4)
+print(x = tab, type = "html", file = "results-fits.html", digits = 4)
 
