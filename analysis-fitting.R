@@ -138,7 +138,7 @@ for(i in 2:length(m.list)){
                      data = as.list(csdata),
                      disp.mod = paste(m.list[i]),
                      method = c("Nelder-Mead"),
-                     control = list(maxit = 2000, reltol = 1e-6))
+                     control = list(maxit = 2000))
         if(fit$convergence == 10){
             t <- 1
             maxt <- 10
@@ -148,7 +148,7 @@ for(i in 2:length(m.list)){
                              data = as.list(csdata),
                              disp.mod = paste(m.list[i]),
                              method = c("Nelder-Mead"),
-                             control = list(maxit = 2000, reltol = 1e-6))
+                             control = list(maxit = 2000))
                 if(fit$convergence == 0) break
                 t <- t + 1
             }
@@ -216,7 +216,7 @@ for(i in 2:length(m.list)){
                      data = as.list(cfdata),
                      disp.mod = paste(m.list[i]),
                      method = c("Nelder-Mead"),
-                     control = list(maxit = 2000, reltol = 1e-6))
+                     control = list(maxit = 2000))
         if(fit$convergence == 10){
             t <- 1
             maxt <- 10
@@ -226,7 +226,7 @@ for(i in 2:length(m.list)){
                              data = as.list(cfdata),
                              disp.mod = paste(m.list[i]),
                              method = c("Nelder-Mead"),
-                             control = list(maxit = 2000, reltol = 1e-6))
+                             control = list(maxit = 2000))
                 if(fit$convergence == 0) break
                 t <- t + 1
             }
