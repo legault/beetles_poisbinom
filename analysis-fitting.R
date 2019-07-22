@@ -5,23 +5,21 @@ library(poibin)
 library(plyr)
 # Source xtable for saving tables
 library(xtable)
-# Source models
-source("models/model0.R")$value
-source("models/model1.R")$value
-source("models/model2.R")$value
-source("models/model3.R")$value
-source("models/model4.R")$value
-source("models/model5.R")$value
-source("models/model6.R")$value
-source("models/model7.R")$value
-source("models/model8.R")$value
-source("models/model9.R")$value
+
+# Create list of models
+m.list <- list.files(path = "models", pattern = "*.R")
+# Source pmf functions
+sapply(m.list, FUN = function(X) source(paste("models/", X, sep = "")))
+# Trim ".R" extension from list
+m.list <- gsub(pattern = "\\.R$", "", m.list)
 
 # Set seed
 set.seed(20190422)
 
+# Source negative log-likelihood function (general)
+source("nll.R")$value
 
-# Rounding function
+# Create rounding function
 mround <- function(x, base){
         base * round(x / base)
 }
@@ -70,11 +68,6 @@ cfdata <- data.frame(patch1.before = cf.r[, "numCF1b.r"],
                      patch1.other.before = cf.r[, "numCS1b.r"],
                      patch2.other.before = cf.r[, "numCS2b.r"])
 
-
-# Source negative log-likelihood function (general)
-source("nll.R")$value
-# Create a list models of models to optimize
-m.list <- grep("model", ls(), value = TRUE)
 # Create empty table of estimates
 estimates <- data.frame(Species = c(),
                         Model = c(),
@@ -254,6 +247,15 @@ for(i in 2:length(m.list)){
 }
 estimates.summary <- estimates.summary[order(estimates.summary$Species), ]
 
-tab <- xtable(estimates.summary[, -5], digits = 4)
-print(x = tab, type = "html", file = "results-fits.html", digits = 4)
+print(estimates.summary)
+
+# Calculate AIC
+estimates.summary$AIC <- 2 * estimates.summary$Parameters + (2 * estimates.summary$negloglike)
+
+# Print to file
+tab <- xtable(estimates.summary[, -5], digits = 5)
+## tex
+print(x = tab, type = "latex", file = "results-fits.tex", digits = 5)
+## html
+print(x = tab, type = "html", file = "results-fits.html", digits = 5)
 
