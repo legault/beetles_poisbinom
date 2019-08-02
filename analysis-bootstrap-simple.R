@@ -132,15 +132,16 @@ startingvalues <- list(p0 = -1.93904,
                        b3 = -0.0066)
 ### Run optimizer
 for(j in 1:numr){
-    csdata.gen1 <- subset(csdata, gen == 1)
-    csdata.gen2 <- subset(csdata, gen == 2)
-    csdata.gen3 <- subset(csdata, gen == 3)
-    rands.gen1 <- sample(1:nrow(csdata.gen1), size = nrow(csdata.gen1), replace = TRUE)
-    rands.gen2 <- sample(1:nrow(csdata.gen2), size = nrow(csdata.gen2), replace = TRUE)
-    rands.gen3 <- sample(1:nrow(csdata.gen3), size = nrow(csdata.gen3), replace = TRUE)
-    csdata.gen1 <- csdata.gen1[rands.gen1, ]
-    csdata.gen2 <- csdata.gen2[rands.gen2, ]
-    csdata.gen3 <- csdata.gen3[rands.gen3, ]
+    cfdata.gen1 <- subset(cfdata, gen == 1)
+    cfdata.gen2 <- subset(cfdata, gen == 2)
+    cfdata.gen3 <- subset(cfdata, gen == 3)
+    rands.gen1 <- sample(1:nrow(cfdata.gen1), size = nrow(cfdata.gen1), replace = TRUE)
+    rands.gen2 <- sample(1:nrow(cfdata.gen2), size = nrow(cfdata.gen2), replace = TRUE)
+    rands.gen3 <- sample(1:nrow(cfdata.gen3), size = nrow(cfdata.gen3), replace = TRUE)
+    cfdata.gen1 <- cfdata.gen1[rands.gen1, ]
+    cfdata.gen2 <- cfdata.gen2[rands.gen2, ]
+    cfdata.gen3 <- cfdata.gen3[rands.gen3, ]
+    data.temp <- rbind(cfdata.gen1, cfdata.gen2, cfdata.gen3)[, -1]
     fit <- optim(par = startingvalues,
                  fn = nll,
                  data = as.list(data.temp),
