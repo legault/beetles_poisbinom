@@ -2,7 +2,7 @@
 # Source xtable for saving tables
 library(xtable)
 
-results <- read.csv(file = "results-bootstrap-all.csv", header = TRUE)
+results <- read.csv(file = "data/results-bootstrap.csv", header = TRUE)
 
 cs <- subset(results, Species == "CS" & converge == 0)
 cs.summary <- data.frame(Species = "CS",
