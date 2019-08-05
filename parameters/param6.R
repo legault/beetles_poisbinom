@@ -1,3 +1,0 @@
-param6 <- list(p0 = log(.1 / (1 - .1)), # density-independent prob of dispersing (logit scale)
-               b3 = 0.03 # density-dependent effect on dispersal (p1.other.before, logit scale)
-               ) 

@@ -1,5 +1,5 @@
 # Source parameters
-source("../parameters/param6.R")$value
+source("param.R")$value
 # Source model1
 source("../models/model6.R")$value
 # Set number of simulations
@@ -16,9 +16,9 @@ sim.stor[, 2] <- rpois(n = sims, lambda = 50) # random abundance before dispersa
 sim.stor[, 5] <- rpois(n = sims, lambda = 70) # random abundance (other)  before dispersal in patch1
 sim.stor[, 6] <- rpois(n = sims, lambda = 20) # random abundance (other) before dispersal in patch2
 d1 <- rbinom(n = sims, size = sim.stor[, 1],
-             prob = model6(sim.stor[, 5], param6$p0, param6$b3)) # dispersal patch1
+             prob = model6(sim.stor[, 5], param$p0, param$b3)) # dispersal patch1
 d2 <- rbinom(n = sims, size = sim.stor[, 2],
-             prob = model6(sim.stor[, 6], param6$p0, param6$b3)) # dispersal patch2
+             prob = model6(sim.stor[, 6], param$p0, param$b3)) # dispersal patch2
 sim.stor[, 3] <- sim.stor[, 1] - d1 + d2 # abundance after dispersal in patch1
 sim.stor[, 4] <- sim.stor[, 2] - d2 + d1 # abundance after dispersal in patch2
 ## Rename columns
