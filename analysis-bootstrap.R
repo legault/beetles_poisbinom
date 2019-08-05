@@ -6,7 +6,8 @@ library(plyr)
 # Source xtable for saving tables
 library(xtable)
 # Source best-fit models
-source("models/model6.R")$value # CS and CF
+source("models/model14.R")$value # CS
+source("models/model11.R")$value # CF
 
 # Set seed
 set.seed(20190719)
@@ -20,7 +21,7 @@ mround <- function(x, base){
 }
 
 # Source data
-cs <- read.csv("data/csDat.csv", header = TRUE)
+cs <- read.csv("archive/csDat.csv", header = TRUE)
 # Round counts
 cs$numCS1b.r <- mround(cs$numCS1b, 10)
 cs$numCS2b.r <- mround(cs$numCS2b, 10)
@@ -83,8 +84,10 @@ estimates <- data.frame(Species = c(),
 
 # CS
 ### Set estimates as starting values for p0
-startingvalues <- list(p0 = -1.10995,
-                       b3 = 0.00231)
+startingvalues <- list(p0 = -1.07206,
+                       b1 = 0.00137,
+                       b2 = 0.00889,
+                       b4 = -0.00341)
 ### Run optimizer
 for(j in 1:numr){
     csdata.gen1 <- subset(csdata, gen == 1)
@@ -100,7 +103,7 @@ for(j in 1:numr){
     fit <- optim(par = startingvalues,
                  fn = nll,
                  data = as.list(data.temp),
-                 disp.mod = model6,
+                 disp.mod = model14,
                  method = c("Nelder-Mead"),
                  control = list(maxit = 2000))
     if(fit$convergence == 10){
@@ -110,7 +113,7 @@ for(j in 1:numr){
             fit <- optim(par = lapply(fit$par, FUN = function(X) rnorm(n=1, mean=X, sd=0.01)),
                          fn = nll,
                          data = as.list(data.temp),
-                         disp.mod = model6,
+                         disp.mod = model14,
                          method = c("Nelder-Mead"),
                          control = list(maxit = 2000))
             if(fit$convergence == 0) break
@@ -118,7 +121,7 @@ for(j in 1:numr){
         }
     }
     estimates.temp <- cbind(data.frame(Species = c("CS"),
-                                       Model = c("model6"),
+                                       Model = c("model14"),
                                        Parameters = length(fit$par),
                                        negloglike = fit$value,
                                        set = j,
@@ -128,8 +131,9 @@ for(j in 1:numr){
 }
 
 # CF
-startingvalues <- list(p0 = -1.93904,
-                       b3 = -0.0066)
+startingvalues <- list(p0 = -1.91893,
+                       b2 = 0.01217,
+                       b3 = -0.00578)
 ### Run optimizer
 for(j in 1:numr){
     cfdata.gen1 <- subset(cfdata, gen == 1)
@@ -145,7 +149,7 @@ for(j in 1:numr){
     fit <- optim(par = startingvalues,
                  fn = nll,
                  data = as.list(data.temp),
-                 disp.mod = model6,
+                 disp.mod = model11,
                  method = c("Nelder-Mead"),
                  control = list(maxit = 2000))
     if(fit$convergence == 10){
@@ -155,7 +159,7 @@ for(j in 1:numr){
             fit <- optim(par = lapply(fit$par, FUN = function(X) rnorm(n=1, mean=X, sd=0.01)),
                          fn = nll,
                          data = as.list(data.temp),
-                         disp.mod = model6,
+                         disp.mod = model11,
                          method = c("Nelder-Mead"),
                          control = list(maxit = 2000))
             if(fit$convergence == 0) break
@@ -163,7 +167,7 @@ for(j in 1:numr){
         }
     }
     estimates.temp <- cbind(data.frame(Species = c("CF"),
-                                       Model = c("model6"),
+                                       Model = c("model11"),
                                        Parameters = length(fit$par),
                                        negloglike = fit$value,
                                        set = j,
@@ -172,8 +176,4 @@ for(j in 1:numr){
     estimates <- rbind.fill(estimates, estimates.temp)
 }
 
-## # Summary
-## tab <- xtable(estimates, digits = 5)
-## print(x = tab, type = "latex", file = "results-bootstrap.tex", digits = 4)
-
-write.table(estimates, file="results-bootstrap-simple.csv", sep = ",", quote = FALSE, row.names = FALSE)
+write.table(estimates, file="results-bootstrap.csv", sep = ",", quote = FALSE, row.names = FALSE)
