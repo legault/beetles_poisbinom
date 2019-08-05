@@ -1,4 +1,4 @@
-* Poisson binomial model of dispersal
+# Poisson binomial model of dispersal
 
 This repository contains R scripts associated with the paper:
 
@@ -10,31 +10,31 @@ We assume that the number of beetles in a patch (e.g., patch 1) prior to dispers
 
 The probabilities p1 and p2 are calculated from the 16 dispersal models.
 
-** nll.R
+## nll.R
 
 This function calculates the negative log-likelihood of the data given the parameters and the dispersal model being tested.
 
-** models/
+## models/
 
 This folder contains the 16 dispersal models
 
-** analysis-fitting.R
+## analysis-fitting.R
 
 This script uses "optim" and nll.R to determine which of the models has the best fit to the data.
 
-** analysis-bootstrap.R
+## analysis-bootstrap.R
 
 This script uses non-parametric bootstrapping to estimate the error in the estimates of the best-fit model.
 
-** check-nll.R
+## check-nll.R
 
 This script can be used to check the statistical power of our likelihood function. It estimates the parameter values of the different dispersal models given simulated data
 
-** simulations/
+## simulations/
 
 This folder contains scripts for simulating each of the 16 dispersal models
 
-** data/
+## data/
 
 This folder contains the data used for optimization and boostrapping
 
