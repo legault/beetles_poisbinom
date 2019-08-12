@@ -6,9 +6,11 @@ XXXXXX
 
 The main purpose of these scripts is to estimate the parameters of 16 plausible dispersal models given experimental data involving flour beetles in a 2-patch metacommunity.
 
-We assume that the number of beetles in both patches (1 and 2) prior to dispersal is known and model the number of beetles in patch 1 following dispersal as the random variable Z = X + Y, where X is the number of beetles that did not disperse from patch 1 and Y is the number that did disperse from patch 2 (*Note: Assuming a closed system, the number of beetles after dispersal in patch 1 exactly determines the number of beetles in patch 2. so it only necessary to model the number of beetles in a single patch*). Here, X and Y are treated as binomial random variables with probabilities p1 and p2. Therefore, Z is a Poisson binomial random variable. The probability mass function for this distribution is known and we use the package [poibin](https://cran.r-project.org/web/packages/poibin/index.html) to solve it.
+We assume that the number of beetles in both patches (1 and 2) prior to dispersal is known and model the number of beetles in patch 1 following dispersal as the random variable Z = X + Y, where X is the number of beetles that did not disperse from patch 1 and Y is the number that did disperse from patch 2. Here, X and Y are treated as binomial random variables with probabilities p1 and p2. Therefore, Z is a Poisson binomial random variable. The probability mass function for this distribution is known and we use the package [poibin](https://cran.r-project.org/web/packages/poibin/index.html) to solve it.
 
 The probabilities p1 and p2 are calculated from the 16 dispersal models.
+
+*Note: Assuming a closed system, the number of beetles after dispersal in patch 1 exactly determines the number of beetles in patch 2. so it only necessary to model the number of beetles in a single patch*
 
 ## nll.R
 
