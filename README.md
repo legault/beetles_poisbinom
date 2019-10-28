@@ -16,7 +16,9 @@ This function calculates the negative log-likelihood of the data given the param
 
 ## models/
 
-This folder contains the 16 dispersal models
+This folder contains the 16 dispersal models considered in the main text. 
+
+In addition, it includes an alternate, mathematically equivalent version of the full model ("modelalt5") that conceptualizes the system as one in which densities of beetles equilibrate between the two patches. See the supplementary text for a description of this model and its interpretation.
 
 ## analysis-fitting.R
 
